@@ -7,6 +7,13 @@ use Glorpen\StyleEmbedderBundle\Css\Stylesheet;
 use Glorpen\StyleEmbedderBundle\Css\RuleBag;
 
 class Embedder {
+	
+	protected $twigRenderer;
+	
+	public function __construct(\Twig_Environment $env){
+		$this->twigRenderer = $env;
+	}
+	
 	public function embed($styles, $html){
 		$s = $this->getStylesheet($styles);
 		return $s->apply($html);
@@ -32,5 +39,14 @@ class Embedder {
 		}
 		
 		return $stylesheet;
+	}
+	
+	public function render($template, array $context=array(), $styleBlock = 'style', $htmlBlock = 'html'){
+		$tpl = $this->twigRenderer->loadTemplate($template);
+		
+		$styles = $tpl->renderBlock($styleBlock, $context);
+		$html = $tpl->renderBlock($htmlBlock, $context);
+		
+		return $this->embed($styles, $html);
 	}
 }

@@ -15,7 +15,13 @@ class EmbedderTest extends \PHPUnit_Framework_TestCase {
 	protected $embedder;
 	
 	protected function setUp() {
-		$this->embedder = new Embedder();
+		
+		$templates=array(
+			'template.html.twig' => '{% block style %}* {color:red;}{% endblock %}{% block html %}<div><p>test</p></div>{% endblock %}'
+		);
+		
+		$env = new \Twig_Environment(new \Twig_Loader_Array($templates));
+		$this->embedder = new Embedder($env);
 	}
 
 	
@@ -111,5 +117,10 @@ EOF;
 			$this->assertEquals($d[1], $ret, 'Selector "'.$d[0].'" has specifity '.$d[1]);
 		}
 		
+	}
+	
+	public function testTwigRendering(){
+		$ret = $this->embedder->render('template.html.twig');
+		$this->assertEquals(4, substr_count($ret, 'color:red;'), 'Twig rendering');
 	}
 }
