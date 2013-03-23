@@ -13,6 +13,7 @@ namespace Glorpen\StyleEmbedderBundle\Css;
 use Symfony\Component\CssSelector\CssSelector;
 
 /**
+ * Represents whole css stylesheet, can apply rules to given html
  * @author Arkadiusz Dzięgiel
  */
 class Stylesheet {
@@ -23,10 +24,20 @@ class Stylesheet {
 		$this->rules = array();
 	}
 	
+	/**
+	 * Adds rule bag
+	 * @param RuleBag $rule
+	 */
 	public function add(RuleBag $rule){
 		$this->rules[] = $rule;
 	}
 	
+	/**
+	 * Parses given html and applies rules from this stylesheet
+	 * @param string $html
+	 * @param string $removeAttrs whatever class and id attributes should be removed
+	 * @return string html with embedded styles
+	 */
 	public function apply($html, $removeAttrs=true){
 		
 		$doc = new \DOMDocument();

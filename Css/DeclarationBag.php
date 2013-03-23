@@ -11,6 +11,7 @@
 namespace Glorpen\StyleEmbedderBundle\Css;
 
 /**
+ * Holds multiple delcarations
  * @author Arkadiusz Dzięgiel
  */
 class DeclarationBag {
@@ -21,10 +22,19 @@ class DeclarationBag {
 		$this->declarations = $declarations;
 	}
 	
+	/**
+	 * Adds declarations from token
+	 * @param \CssRulesetDeclarationToken $declaration
+	 */
 	public function addToken(\CssRulesetDeclarationToken $declaration){
 		$this->declarations[$declaration->Property] = $declaration->Value;
 	}
 	
+	/**
+	 * Merges properties from other bag
+	 * @param DeclarationBag $bag
+	 * @return \Glorpen\StyleEmbedderBundle\Css\DeclarationBag
+	 */
 	public function merge(DeclarationBag $bag){
 		foreach($bag->declarations as $property=>$value){
 			$this->declarations[$property] = $value;

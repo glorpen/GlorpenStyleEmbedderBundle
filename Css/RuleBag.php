@@ -13,6 +13,7 @@ namespace Glorpen\StyleEmbedderBundle\Css;
 use Symfony\Component\CssSelector\CssSelector;
 
 /**
+ * Holds multiple rules with same declarations.
  * @author Arkadiusz Dzięgiel
  */
 class RuleBag {
@@ -28,14 +29,26 @@ class RuleBag {
 		}
 	}
 	
+	/**
+	 * Adds declaration
+	 * @param \CssRulesetDeclarationToken $declaration
+	 */
 	public function add(\CssRulesetDeclarationToken $declaration){
 		$this->declarations->addToken($declaration);
 	}
 	
+	/**
+	 * Returns declarations
+	 * @return \Glorpen\StyleEmbedderBundle\Css\DeclarationBag
+	 */
 	public function getDeclarations(){
 		return $this->declarations;
 	}
 	
+	/**
+	 * Returns rules
+	 * @return array of \Glorpen\StyleEmbedderBundle\Css\Rule
+	 */
 	public function getRules(){
 		return $this->rules;
 	}

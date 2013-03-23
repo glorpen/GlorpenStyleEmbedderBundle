@@ -13,6 +13,7 @@ namespace Glorpen\StyleEmbedderBundle\Css;
 use Symfony\Component\CssSelector\CssSelector;
 
 /**
+ * Represents one CSS rule with declarations.
  * @author Arkadiusz Dzięgiel
  */
 class Rule {
@@ -24,10 +25,18 @@ class Rule {
 		$this->declarations = $declarations?$declarations:new DeclarationBag();
 	}
 	
+	/**
+	 * Returns rule XPath
+	 * @return string
+	 */
 	public function getXPath(){
 		return CssSelector::toXPath($this->selector);
 	}
 	
+	/**
+	 * Returns rule declarations
+	 * @return \Glorpen\StyleEmbedderBundle\Css\DeclarationBag
+	 */
 	public function getDeclarations(){
 		return $this->declarations;
 	}
@@ -55,6 +64,10 @@ class Rule {
 	const TYPE_B = 10;
 	const TYPE_C = 1;
 	
+	/**
+	 * Returns rule css specifity.
+	 * @return number
+	 */
 	public function getSpecifity(){
 		$rule = $this->selector;
 		

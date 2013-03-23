@@ -15,6 +15,7 @@ use Glorpen\StyleEmbedderBundle\Css\Stylesheet;
 use Glorpen\StyleEmbedderBundle\Css\RuleBag;
 
 /**
+ * Embeds css into html elements
  * @author Arkadiusz Dzięgiel
  */
 class Embedder {
@@ -25,11 +26,22 @@ class Embedder {
 		$this->twigRenderer = $env;
 	}
 	
+	/**
+	 * Embeds $styles into $html
+	 * @param string $styles
+	 * @param string $html
+	 * @return string html with embedded styles
+	 */
 	public function embed($styles, $html){
 		$s = $this->getStylesheet($styles);
 		return $s->apply($html);
 	}
 	
+	/**
+	 * Returns stylesheet for given css data
+	 * @param string $data css styles
+	 * @return \Glorpen\StyleEmbedderBundle\Css\Stylesheet
+	 */
 	public function getStylesheet($data){
 		$parser = new \CssMin();
 		
@@ -52,6 +64,14 @@ class Embedder {
 		return $stylesheet;
 	}
 	
+	/**
+	 * Renders twig template
+	 * @param string $template
+	 * @param array $context vars for template
+	 * @param string $styleBlock style block name
+	 * @param string $htmlBlock html block name
+	 * @return string
+	 */
 	public function render($template, array $context=array(), $styleBlock = 'style', $htmlBlock = 'html'){
 		$tpl = $this->twigRenderer->loadTemplate($template);
 		
