@@ -5,7 +5,11 @@
     "license": "GPL-3.0",
     "require": {
         "symfony/symfony": "2.1.*",
-        "symfony/css-selector": "*"
+        "symfony/css-selector": "*",
+        "natxet/CssMin": "@dev"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
     },
     "authors": [
         {

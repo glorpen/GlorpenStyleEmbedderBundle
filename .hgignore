@@ -3,3 +3,6 @@ syntax: regexp
 ^TODO$
 ^\.project$
 ^\.buildpath$
+^composer.lock$
+^composer.phar$
+^vendor$
