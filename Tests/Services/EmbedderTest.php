@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * This file is part of the GlorpenStyleEmbedderBundle package.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ *
+ * @license GPLv3
+ */
+
 namespace Glorpen\StyleEmbedderBundle\Tests\Service;
 
 use Glorpen\StyleEmbedderBundle\Css\Rule;
@@ -10,14 +18,46 @@ use Glorpen\StyleEmbedderBundle\Css\RuleBag;
 
 use Glorpen\StyleEmbedderBundle\Services\Embedder;
 
+/**
+ * @author Arkadiusz Dzięgiel
+ */
 class EmbedderTest extends \PHPUnit_Framework_TestCase {
 	
 	protected $embedder;
 	
 	protected function setUp() {
 		
+		$twig = <<<EOF
+   {% block style %}
+      .footer * {
+         color: silver;
+      }
+	  .footer p {
+		font-weight: bold;
+		}
+      .footer p > span {
+		 font-weight: normal;
+      }
+      h1 {
+         font-size: 20px;
+      }
+   {% endblock %}
+   {% block html %}
+   <html>
+      <head></head>
+      <body>
+         <h1>Some Header</h1>
+         <div class="footer">
+            <p>Address: <span>Our address</span></p>
+            <p>Tel.: <span>123-456-789</span></p>
+         </div>
+      </body>
+   </html>
+   {% endblock %}
+EOF;
+		
 		$templates=array(
-			'template.html.twig' => '{% block style %}* {color:red;}{% endblock %}{% block html %}<div><p>test</p></div>{% endblock %}'
+			'template.html.twig' => $twig
 		);
 		
 		$env = new \Twig_Environment(new \Twig_Loader_Array($templates));
@@ -121,6 +161,7 @@ EOF;
 	
 	public function testTwigRendering(){
 		$ret = $this->embedder->render('template.html.twig');
+		echo $ret;
 		$this->assertEquals(4, substr_count($ret, 'color:red;'), 'Twig rendering');
 	}
 }
