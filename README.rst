@@ -2,13 +2,13 @@
 GlorpenStyleEmbedderBundle
 --------------------------
 
-Reads CSS styles and applies it to html elements.
+Parses given CSS styles and applies it to html elements. Embedding is often needed in newsletters - with inline styles it should look good in any browser/client and you don't have to mantain style spaghetti :)
 
 Since css is embedded into style attribute, pseudo selectors are not supported (:hover,:nth-child, etc).
 
 You can use any css selector combination. Multiple selectors will be applied to single element with accounting for css selector specifity, so you can write:
 
-.. sourcecode: css
+.. sourcecode:: css
 
    * { color: red; }
    #myId { color: blue; }
