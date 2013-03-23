@@ -8,10 +8,11 @@ use Glorpen\StyleEmbedderBundle\Css\RuleBag;
 
 class Embedder {
 	public function embed($styles, $html){
-		//$xpath = CssSelector::toXPath('div.item > h4 > a');
+		$s = $this->getStylesheet($styles);
+		return $s->apply($html);
 	}
 	
-	public function tokenize($data){
+	public function getStylesheet($data){
 		$parser = new \CssMin();
 		
 		$stylesheet = new Stylesheet();
@@ -30,6 +31,6 @@ class Embedder {
 			}
 		}
 		
-		return $stylesheet->linearize();
+		return $stylesheet;
 	}
 }

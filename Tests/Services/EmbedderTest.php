@@ -2,6 +2,8 @@
 
 namespace Glorpen\StyleEmbedderBundle\Tests\Service;
 
+use Glorpen\StyleEmbedderBundle\Css\Rule;
+
 use Symfony\Component\CssSelector\CssSelector;
 
 use Glorpen\StyleEmbedderBundle\Css\RuleBag;
@@ -17,17 +19,72 @@ class EmbedderTest extends \PHPUnit_Framework_TestCase {
 	}
 
 	
-	public function testSimpleRuleExtracting(){
+	public function testRuleApplying(){
 		$data = <<<EOF
-	 .intro, #someId2, table , a 
-				b d	, a
-				>
-				b+c[d~=e]{ 
-		-moz: asd;
-		background-image: url("asd{}//");
+p, .class, #id, #id * { 
+	color: red;
+}
+p.big {
+	font-size:20px;
+	font-weight: bold;
 }
 EOF;
-		var_dump($this->embedder->tokenize($data));
+		$stylesheet = $this->embedder->getStylesheet($data);
+		
+		$html = <<<EOF
+<html>
+		<head></head>
+		<body>
+			<p>some p</p>
+			<div id="id">
+				<span data-inside-div>some text</span>
+				<p class="big class"></p>
+			</div>
+		</body>
+</html>
+EOF;
+		
+		$ret = $stylesheet->apply($html, false);
+		
+		$this->assertContains('id="id" style="color:red;"', $ret);
+		$this->assertContains('<p style="color:red;">', $ret);
+		$this->assertContains('data-inside-div style="color:red;"', $ret);
+		$this->assertContains('class="big class" style="color:red;font-size:20px;font-weight:bold;"', $ret);
+	}
+	
+	public function testApplyingWhenSameSpecifity(){
+		$data = <<<EOF
+p {
+	color: red;
+}
+p {
+	color: black;
+}
+EOF;
+		$stylesheet = $this->embedder->getStylesheet($data);
+	
+		$html = <<<EOF
+<html><body><p>some p</p></body></html>
+EOF;
+	
+		$ret = $stylesheet->apply($html);
+		$this->assertContains('style="color:black;"', $ret);
+	}
+
+	public function testApplyingWhenStyleExists(){
+		$data = <<<EOF
+p {
+	color: red;
+}
+EOF;
+		$stylesheet = $this->embedder->getStylesheet($data);
+	
+		$html = <<<EOF
+<html><body><p style="color:black">some p</p></body></html>
+EOF;
+	
+		$ret = $stylesheet->apply($html);
+		$this->assertContains('style="color:red;color:black"', $ret);
 	}
 	
 	public function testRulesSpecifity(){
@@ -49,7 +106,8 @@ EOF;
 		);
 		
 		foreach($data as $d){
-			$ret = RuleBag::getRuleSpecifity($d[0]);
+			$rule = new Rule($d[0]);
+			$ret = $rule->getSpecifity();
 			$this->assertEquals($d[1], $ret, 'Selector "'.$d[0].'" has specifity '.$d[1]);
 		}
 		
