@@ -41,7 +41,10 @@ class Stylesheet {
 	public function apply($html, $removeAttrs=true){
 		
 		$doc = new \DOMDocument();
+		
+		libxml_use_internal_errors(true);
 		$doc->loadHTML($html);
+		libxml_use_internal_errors(false);
 		
 		$xpath = new \DOMXPath($doc);
 		
